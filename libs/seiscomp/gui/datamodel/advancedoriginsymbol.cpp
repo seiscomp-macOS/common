@@ -30,6 +30,10 @@
 
 #include <iostream>
 
+#ifdef __APPLE__
+#define sincos __sincos
+#endif
+
 namespace Seiscomp {
 namespace Gui {
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
