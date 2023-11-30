@@ -1879,10 +1879,17 @@ uint32_t getConfig(const Application *app, const string &symbol, bool) {
 	return static_cast<uint32_t>(app->configGetInt(symbol));
 }
 
+#ifdef __APPLE__
+template <>
+unsigned long getConfig(const Application *app, const string &symbol, bool) {
+	return static_cast<unsigned long>(app->configGetInt(symbol));
+}
+#else
 template <>
 uint64_t getConfig(const Application *app, const string &symbol, bool) {
 	return static_cast<uint64_t>(app->configGetInt(symbol));
 }
+#endif
 
 template <>
 double getConfig(const Application *app, const string &symbol, bool) {
