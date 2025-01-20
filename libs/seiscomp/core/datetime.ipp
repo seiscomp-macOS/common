@@ -308,9 +308,16 @@ inline constexpr double TimeSpan::length() const {
 
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#ifdef __APPLE__
+inline Time::Time(Storage epochSeconds, Storage epochMicroSeconds)
+: _repr(TimePoint(TimeSpan::Seconds(epochSeconds) + TimeSpan::MicroSeconds(epochMicroSeconds)))
+{}
+#else
 inline constexpr Time::Time(Storage epochSeconds, Storage epochMicroSeconds)
 : _repr(TimePoint(TimeSpan::Seconds(epochSeconds) + TimeSpan::MicroSeconds(epochMicroSeconds)))
 {}
+#endif
+
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
@@ -363,6 +370,15 @@ inline Time &Time::operator-=(const TimeSpan &ts) {
 	return *this;
 }
 
+#ifdef __APPLE__
+inline Time Time::operator+(const TimeSpan &ts) const {
+	return Time(_repr + ts._repr);
+}
+
+inline Time Time::operator-(const TimeSpan &ts) const {
+	return Time(_repr - ts._repr);
+}
+#else
 inline constexpr Time Time::operator+(const TimeSpan &ts) const {
 	return Time(_repr + ts._repr);
 }
@@ -370,19 +386,28 @@ inline constexpr Time Time::operator+(const TimeSpan &ts) const {
 inline constexpr Time Time::operator-(const TimeSpan &ts) const {
 	return Time(_repr - ts._repr);
 }
+#endif
 
 inline constexpr TimeSpan Time::operator-(const Time &tp) const {
 	return TimeSpan(_repr - tp._repr);
 }
+
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#ifdef __APPLE__
+inline Time::operator TimePoint() const noexcept {
+	return _repr;
+}
+#else
 inline constexpr Time::operator TimePoint() const noexcept {
 	return _repr;
 }
+#endif
+
 
 inline constexpr Time::operator double() const noexcept {
 	return epoch();
