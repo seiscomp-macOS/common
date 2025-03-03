@@ -21,7 +21,7 @@
 
 #include <charconv>
 
-#if defined __GLIBCXX__ && _GLIBCXX_RELEASE < 11 && __cplusplus >= 201703L
+#if defined __GLIBCXX__ && _GLIBCXX_RELEASE < 11 && __cplusplus >= 201703L || __APPLE__
 
 #if __cpp_lib_to_chars < 201611L && _GLIBCXX_HAVE_USELOCALE
 #	undef __cpp_lib_to_chars
@@ -76,7 +76,7 @@ constexpr chars_format
     const char* ptr;
     errc ec;
 
-#if __cplusplus > 201703L && __cpp_impl_three_way_comparison >= 201907L
+#if __cplusplus > 201703L && __cpp_impl_three_way_comparison >= 201907L || __APPLE__
     friend bool
     operator==(const from_chars_result&, const from_chars_result&) = default;
 #endif
