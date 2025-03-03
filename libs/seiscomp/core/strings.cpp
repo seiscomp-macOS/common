@@ -290,7 +290,7 @@ bool fromString(double &value, std::string_view sv) {
 			++first;
 		}
 
-#if defined __GNUC__ && __GNUC__ < 11 && __cplusplus >= 201703L
+#if defined __GNUC__ && __GNUC__ < 11 && __cplusplus >= 201703L || __APPLE__
 		auto r = std::backports::from_chars(first, last, value);
 #else
 	    auto r = std::from_chars(first, last, value);
