@@ -209,6 +209,23 @@ SC_ADD_LIBRARY(SYSTEM_CORE core)
 
 SC_LIB_INSTALL_HEADERS(SYSTEM_CORE)
 
+# Remove rt lib for macOS
+IF(APPLE)
+SC_LIB_LINK_LIBRARIES(
+	core
+		${Boost_thread_LIBRARY}
+		${Boost_iostreams_LIBRARY}
+		${Boost_filesystem_LIBRARY}
+		${Boost_regex_LIBRARY}
+		${Boost_program_options_LIBRARY}
+		${Boost_container_LIBRARY}
+		${Boost_LIBRARIES}
+		pthread
+		tau_internal
+		${LIBXML2_LIBRARIES}
+		${OPENSSL_LIBRARIES}
+)
+ELSE()
 SC_LIB_LINK_LIBRARIES(
 	core
 		${Boost_thread_LIBRARY}
@@ -225,6 +242,8 @@ SC_LIB_LINK_LIBRARIES(
 		${OPENSSL_LIBRARIES}
 		stdc++fs
 )
+ENDIF(NOT APPLE)
+
 SC_LIB_VERSION(core ${SC_COMMON_VERSION} ${SC_COMMON_VERSION_MAJOR})
 SC_LIB_LINK_LIBRARIES_INTERNAL(core config)
 
