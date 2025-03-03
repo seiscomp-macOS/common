@@ -40,7 +40,17 @@
 #include <cstring>
 #include <cctype>
 #include <locale.h>
+#if !defined (__APPLE__)
 #include <bits/functexcept.h>
+#endif
+    
+#if defined (__APPLE__)
+// Define macros to replace all __functions
+    #define __try try
+    #define __catch catch
+    #define __exchange exchange
+    #define __glibcxx_assert assert
+#endif
 
 #ifdef _GLIBCXX_LONG_DOUBLE_ALT128_COMPAT
 #ifndef __LONG_DOUBLE_IBM128__
