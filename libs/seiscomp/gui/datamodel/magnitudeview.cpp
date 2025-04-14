@@ -308,7 +308,14 @@ class ModelFieldValueFilter : public ModelAbstractRowFilter {
 			// Actually this->_op is not necessary but due to a bug of clang
 			// this line is required as a hotfix, see
 			// https://stackoverflow.com/questions/55359614/clang-complains-about-constexpr-function-in-case-for-switch-statement
-			switch ( this->_op ) {
+			#ifdef __APPLE__
+			    const auto & _op = this->_op;
+			#endif
+			#ifdef __APPLE__
+			    switch ( _op ) {
+			#else
+			    switch ( this->_op ) {
+			#endif
 				case Less:
 					return std::less<T>()(model->data(idx, Qt::UserRole).value<T>(), v);
 				case LessEqual:
