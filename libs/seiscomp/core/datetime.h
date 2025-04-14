@@ -274,13 +274,7 @@ class Time {
 		Time() = default;
 		Time(const Time &other) = default;
 		explicit constexpr Time(const TimePoint &tp);
-		#ifdef __APPLE__
-		// avoids error: non-constexpr declaration of 'Time' follows constexpr declaration
-		explicit Time(Storage epochSeconds, Storage microSeconds = 0);
-		#else
 		explicit constexpr Time(Storage epochSeconds, Storage microSeconds = 0);
-		#endif
-		
 		explicit Time(double);
 		Time(int year, int month, int day,
 		     int hour = 0, int min = 0, int sec = 0,
@@ -313,14 +307,8 @@ class Time {
 		Time &operator+=(const TimeSpan &ts);
 		Time &operator-=(const TimeSpan &ts);
 
-		#ifdef __APPLE__
-		Time operator+(const TimeSpan &ts) const;
-		Time operator-(const TimeSpan &ts) const;
-		#else
 		constexpr Time operator+(const TimeSpan &ts) const;
 		constexpr Time operator-(const TimeSpan &ts) const;
-		#endif
-		
 		constexpr TimeSpan operator-(const Time &tp) const;
 
 
@@ -328,12 +316,7 @@ class Time {
 	//  Conversion operators
 	// ----------------------------------------------------------------------
 	public:
-		#ifdef __APPLE__
-		explicit operator TimePoint() const noexcept;
-		#else
 		constexpr explicit operator TimePoint() const noexcept;
-		#endif
-		
 		constexpr explicit operator double() const noexcept;
 		[[deprecated("Use OPT(Time) instead")]]
 		constexpr explicit operator bool() const noexcept;
