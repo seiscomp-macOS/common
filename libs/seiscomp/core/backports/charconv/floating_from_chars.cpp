@@ -54,7 +54,7 @@
 #endif
 
 
-#if defined __GLIBCXX__ && _GLIBCXX_RELEASE < 11 && __cplusplus >= 201703L
+#if defined __GLIBCXX__ && _GLIBCXX_RELEASE < 11 && __cplusplus >= 201703L || __APPLE__
 
 
 #ifdef _GLIBCXX_LONG_DOUBLE_ALT128_COMPAT
