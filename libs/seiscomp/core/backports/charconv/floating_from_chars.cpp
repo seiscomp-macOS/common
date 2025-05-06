@@ -27,6 +27,7 @@
 // 23.2.9  Primitive numeric input conversion [utility.from.chars]
 //
 
+
 // Prefer to use std::pmr::string if possible, which requires the cxx11 ABI.
 #define _GLIBCXX_USE_CXX11_ABI 1
 
@@ -51,6 +52,10 @@
     #define __exchange exchange
     #define __glibcxx_assert assert
 #endif
+
+
+#if defined __GLIBCXX__ && _GLIBCXX_RELEASE < 11 && __cplusplus >= 201703L
+
 
 #ifdef _GLIBCXX_LONG_DOUBLE_ALT128_COMPAT
 #ifndef __LONG_DOUBLE_IBM128__
@@ -521,3 +526,6 @@ from_chars(const char* first, const char* last, __ieee128& value,
 #endif
 
 } // namespace backports
+
+
+#endif
