@@ -304,11 +304,12 @@ IF (MSEED_FOUND)
 	SC_LIB_LINK_LIBRARIES(core ${LIBMSEED_LIBRARY})
 ENDIF (MSEED_FOUND)
 
-FIND_LIBRARY(LIBRT rt)
-IF(LIBRT)
-	SC_LIB_LINK_LIBRARIES(core ${LIBRT})
-ENDIF()
-
+IF(NOT APPLE)
+    FIND_LIBRARY(LIBRT rt)
+    IF(LIBRT)
+	    SC_LIB_LINK_LIBRARIES(core ${LIBRT})
+    ENDIF()
+ENDIF(NOT APPLE)
 
 # ------------------------------------------------------------------------------
 # CLIENT LIBRARY
