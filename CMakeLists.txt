@@ -20,7 +20,16 @@ IF (WIN32)
 ENDIF (WIN32)
 
 FIND_PACKAGE(OpenSSL REQUIRED)
-FIND_PACKAGE(bson-1.0 1.14 REQUIRED)
+
+# On macOS search for bson-v1.0 dylib with pkgconf, which is done in common/libs/seiscomp/CMakeLists.txt
+# Once BSON_LINK_LIBRARIES are found, add it to macro SC_LIB_LINK_LIBRARIES() in /libs/seiscomp/CMakeLists.txt
+# bson-1.0 comes with Homebrew "mongo-c-driver@1"
+# If you link bson-v1.0 dylib from BSON_LINK_LIBRARIES here it fails to compile lib/libseiscomp_core.dylib
+# bson-v1.0 dylib needs to be linked in to macro SC_LIB_LINK_LIBRARIES() in /libs/seiscomp/CMakeLists.txt
+IF(NOT APPLE)
+    FIND_PACKAGE(bson-1.0 1.14 REQUIRED)
+ENDIF(NOT APPLE)
+
 
 IF (SC_TRUNK_DB_MYSQL)
 	FIND_PACKAGE(MySQL REQUIRED)
