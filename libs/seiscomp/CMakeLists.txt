@@ -13,6 +13,39 @@ INCLUDE_DIRECTORIES(${Boost_thread_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(${Boost_container_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(${THIRD_PARTY_DIRECTORY}/libbson/src)
 INCLUDE_DIRECTORIES(${SC3_PACKAGE_BINARY_DIR}/libs/3rd-party/libbson/src)
+
+IF(APPLE)
+    ## On macOS search for bson-1.0 library within Homebrew "mongo-c-driver@1" package
+    EXECUTE_PROCESS(COMMAND brew --prefix mongo-c-driver@1
+        RESULT_VARIABLE BREW_BSON
+        OUTPUT_VARIABLE BREW_BSON_PREFIX
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    
+    IF(BREW_BSON EQUAL 0 AND EXISTS "${BREW_BSON_PREFIX}")
+        MESSAGE(STATUS "Found bson-1.0 from mongo-c-driver@1 installed by Homebrew at ${BREW_BSON_PREFIX}")
+    ELSE()
+        MESSAGE(FATAL_ERROR "Homebrew version of bson-1.0 from mongo-c-driver@1 not found. Install with: brew install mongo-c-driver@1")
+    ENDIF()
+    
+    # Use pkgconf to locate bson-1.0 library and include directories from BREW_BSON_PREFIX/lib/cmake/
+    SET(ENV{PKG_CONFIG_PATH} "${BREW_BSON_PREFIX}/lib/pkgconfig")
+    FIND_PACKAGE(PkgConfig REQUIRED)
+    PKG_CHECK_MODULES(BSON REQUIRED libbson-1.0)
+    # Check bson-1.0 in cmake package from BREW_BSON_PREFIX/lib/cmake/
+    FIND_PACKAGE(bson-1.0 REQUIRED CONFIG PATHS "${BREW_BSON_PREFIX}/lib/cmake/")
+    
+    IF(${BSON_FOUND})
+        MESSAGE(STATUS "Homebrew ${BSON_LIBRARIES} library found in  ${BSON_LIBRARY_DIRS}")
+    ELSE()
+         MESSAGE(FATAL_ERROR "Homebrew bson-1.0 was not found. Install with: brew install mongo-c-driver@1")
+    ENDIF()
+    
+    INCLUDE_DIRECTORIES(${BSON_INCLUDE_DIRS})
+    LINK_DIRECTORIES(${BSON_LIBRARY_DIRS})
+
+ENDIF(APPLE)
+     
 INCLUDE_DIRECTORIES(${SC3_PACKAGE_SOURCE_DIR}/apps/messaging/scmaster)
 
 ADD_DEFINITIONS(-DWITH_GIT_REVISION -DWITH_BUILD_INFOS -DFMT_HEADER_ONLY)
